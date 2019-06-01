@@ -20,6 +20,7 @@
           <button type="submit">Add task</button>
         </form>
         <form action="./updateTask.php">
+        <span>Сортировка по дате</span> <a href="sort.php?sort=up">По возрастанию</a> <a href="sort.php?sort=up">По убыванию</a> 
         <? 
            if(@$handle_read=fopen('tasks.txt','r')){
              $counter=0;
@@ -33,7 +34,10 @@
             <i class="fa fa-trash-alt fa-lg"></i>
           </a>
         </div>
-        <? $counter++; endwhile; }?>
+        <? $counter++; endwhile; }
+        if(isset($_GET['error']))
+        echo "<div>".$_GET['error']."</div>";
+        ?>
         </form>
         <script>
           window.onload = () =>{
