@@ -4,6 +4,16 @@
     <link href="./style/style.css" rel="stylesheet">
     </head>
     <body>
+      <?if(@$handle=fopen('tasks.txt','r')){
+            while(($line=fgets($handle))){
+              $lines[strtotime((explode("|", $line)[1]))]=$line;
+            }
+            fclose($handle);
+            if(isset($_GET['sort']) && $_GET['sort']=='up')
+            ksort($lines);
+            else if(isset($_GET['sort']) && $_GET['sort']=='down')
+            krsort($lines);
+            } ?>
         <form action="savetask.php">
           <input type="text" name="task" placeholder="enter task">
           <select name="hour">
@@ -20,21 +30,22 @@
           <button type="submit">Add task</button>
         </form>
         <form action="./updateTask.php">
-        <span>Сортировка по дате</span> <a href="sort.php?sort=up">По возрастанию</a> <a href="sort.php?sort=up">По убыванию</a> 
+        <span>Сортировка по дате</span> <a href="index.php?sort=up">По возрастанию</a> <a href="index.php?sort=down">По убыванию</a> 
         <? 
            if(@$handle_read=fopen('tasks.txt','r')){
              $counter=0;
-            while(($line=fgets($handle_read))):
+            //while(($line=fgets($handle_read))):
+              foreach($lines as $line):
         ?>
         
         <div style="margin-top:10px" class=<?=(strtotime(explode("|", $line)[1])<strtotime(date("H:i Y-m-d")))?'expired':'' ?>>
-          <span class="des"><?=$line ?></span>
+          <span class="des"><?=explode("|", $line)[0].'|'.explode("|", $line)[1] ?></span>
           <i class="fas fa-edit fa-lg editTask" id=<?=$counter?>></i>
           <a href="delete.php?id=<?=$counter?>">
             <i class="fa fa-trash-alt fa-lg"></i>
           </a>
         </div>
-        <? $counter++; endwhile; }
+        <? $counter++; endforeach;fclose($handle_read); }
         if(isset($_GET['error']))
         echo "<div>".$_GET['error']."</div>";
         ?>
@@ -77,7 +88,7 @@
             let calendar = document.createElement('input');
             calendar.type="date";
             calendar.name=`calendar_${i}`;
-            calendar.value=time[1].substring(0, time[1].length - 1);
+            calendar.value=time[1].substring(0, time[1].length);
             event.target.parentNode.insertBefore(input,event.target.parentNode.querySelector('.des'));
             event.target.parentNode.insertBefore(hour,event.target.parentNode.querySelector('.des'));
             event.target.parentNode.insertBefore(minutes,event.target.parentNode.querySelector('.des'));

@@ -5,7 +5,7 @@ if(isset($_GET['task'])){
             header('Location:index.php?error=Неверно+введены+данные');
             else{
             $handle=fopen('tasks.txt','a');
-            fputs($handle,$str.'|'.$_GET['hour'].':'.$_GET['minutes'].' '.$_GET['calendar'].PHP_EOL);
+            fputs($handle,$str.'|'.$_GET['hour'].':'.$_GET['minutes'].' '.$_GET['calendar'].'|'.date("Y-m-d H:i:s").PHP_EOL);
             header('Location:index.php');
             fclose($handle);
             }

@@ -15,7 +15,7 @@ if(@$handle=fopen('tasks.txt','r')){
       break;
       }
       else
-      $lines[]=$mas[$counter]['edit'].'|'.$mas[$counter]['hour'].':'.$mas[$counter]['minutes'].' '.$mas[$counter]['calendar'].PHP_EOL;
+      $lines[]=$mas[$counter]['edit'].'|'.$mas[$counter]['hour'].':'.$mas[$counter]['minutes'].' '.$mas[$counter]['calendar'].'|'.explode("|", $line)[2];
     }
     else
     $lines[]=$line;
