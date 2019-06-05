@@ -1,16 +1,21 @@
 <? 
-if(@$handle=fopen('tasks.txt','r')){
-            while(($line=fgets($handle)))
-            $lines[]=$line;
-            
-fclose($handle);
-if(@$handle=fopen('tasks.txt','w')){
-for($i=0;$i<count($lines);$i++){
-    if($i==$_GET['id'])
-    continue;
-   fputs($handle, $lines[$i]);
-}
-fclose($handle);
-}
+if(file_exists('tasks.txt')){
+  $handle=fopen('tasks.txt','r');
+  if(isset($handle)){
+    while(($line=fgets($handle)))
+        $lines[]=$line;
+    fclose($handle);
+    if(file_exists('tasks.txt')){
+        $handle=fopen('tasks.txt','w');
+        if(isset($handle)){
+            for($i=0;$i<count($lines);$i++){
+            if($i==$_GET['id'])
+                continue;
+                fputs($handle, $lines[$i]);
+            }
+        fclose($handle);
+        }
+    }
+  }
 }
 header('Location:index.php');

@@ -3,8 +3,10 @@
     <link href="./style/css/all.css" rel="stylesheet">
     <link href="./style/style.css" rel="stylesheet">
     </head>
-    <body>
-      <?if(@$handle=fopen('tasks.txt','r')){
+    <body>'
+      <?if(file_exists('tasks.txt')){
+        $handle=fopen('tasks.txt','r');
+         if(isset($handle)){
             while(($line=fgets($handle))){
               $lines[strtotime((explode("|", $line)[1]))]=$line;
             }
@@ -13,7 +15,8 @@
             ksort($lines);
             else if(isset($_GET['sort']) && $_GET['sort']=='down')
             krsort($lines);
-            } ?>
+          }
+        } ?>
         <form action="savetask.php">
           <input type="text" name="task" placeholder="enter task">
           <select name="hour">
@@ -32,10 +35,11 @@
         <form action="./updateTask.php">
         <span>Сортировка по дате</span> <a href="index.php?sort=up">По возрастанию</a> <a href="index.php?sort=down">По убыванию</a> 
         <? 
-           if(@$handle_read=fopen('tasks.txt','r')){
+           if(file_exists('tasks.txt')){
              $counter=0;
-            //while(($line=fgets($handle_read))):
-              foreach($lines as $line):
+             @$handle_read=fopen('tasks.txt','r');
+             if(isset($handle)){
+               foreach($lines as $line):
         ?>
         
         <div style="margin-top:10px" class=<?=(strtotime(explode("|", $line)[1])<strtotime(date("H:i Y-m-d")))?'expired':'' ?>>
@@ -45,7 +49,7 @@
             <i class="fa fa-trash-alt fa-lg"></i>
           </a>
         </div>
-        <? $counter++; endforeach;fclose($handle_read); }
+        <? $counter++; endforeach;fclose($handle_read);} }
         if(isset($_GET['error']))
         echo "<div>".$_GET['error']."</div>";
         ?>
@@ -64,7 +68,6 @@
             let mas=event.target.parentNode.querySelector('.des').innerHTML.split('|');
             input.value=mas[0];
             let time=mas[1].split(' ');
-            //console.log(time[1]);
             let hour=document.createElement('select');
             hour.name=`hour_${i}`;
             for(let i=0;i<24;i++)
