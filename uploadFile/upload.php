@@ -1,6 +1,6 @@
 <?php
-  if(isset($_FILES) && $_FILES['file']['error']===0){
-   if(explode('/',$_FILES['file']['type'])[0]==='image'){
+  if(isset($_FILES['file']['error']) && $_FILES['file']['error']===0 &&  isset($_FILES['file']['name']) && isset($_FILES['file']['tmp_name']) && file_exists($_FILES['file']['tmp_name'])){
+   if(isset($_FILES['file']['type']) && explode('/',$_FILES['file']['type'])[0]==='image'){
      uploadFile();
      header('Location:index.php');
    }

@@ -9,8 +9,10 @@
           <button type="submit">Отправить</button>
         </form>
         <? 
-        if(isset($_GET['error']))
-        echo $_GET['error'];
+        if(isset($_GET['error'])){
+        $error=htmlspecialchars(trim($_GET['error']));
+        echo $error;
+        }
         $result=findAllFiles('./images');
         function cmp($arg1, $arg2)
          {
