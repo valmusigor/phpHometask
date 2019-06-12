@@ -1,13 +1,16 @@
 <? 
+$config=require_once('./config.php');
+if(isset($_COOKIE['auth']) && $_COOKIE['auth']==='ok' && isset($_COOKIE['id']) && array_key_exists($_COOKIE['id'], $config)){
+
+  if(isset($config[$_COOKIE['id']]['file']))
+{
+  
 foreach($_GET as $key=>$value)
 $mas[explode("_", $key)[1]][explode("_", $key)[0]]=htmlspecialchars(str_replace('|','',trim($value)));
-echo"<pre>";
-print_r($mas);
-echo"</pre>";
 $counter=0;
 $ind=false;
-if(file_exists('tasks.txt')){
-  $handle=fopen('tasks.txt','r');
+if(file_exists($config[$_COOKIE['id']]['file'])){
+  $handle=fopen($config[$_COOKIE['id']]['file'],'r');
   if(isset($handle)){
     while(($line=fgets($handle))){
       $str='';
@@ -26,8 +29,8 @@ if(file_exists('tasks.txt')){
     fclose($handle);
     if($ind)
       header('Location:index.php?error=Ошибка+редактирования');
-    else if(file_exists('tasks.txt')){
-      $handle=fopen('tasks.txt','w');
+    else if(file_exists($config[$_COOKIE['id']]['file'])){
+      $handle=fopen($config[$_COOKIE['id']]['file'],'w');
       if(isset($handle)){
         for($i=0;$i<count($lines);$i++){
           fputs($handle, $lines[$i]);
@@ -41,3 +44,6 @@ if(file_exists('tasks.txt')){
   }
   else header('Location:index.php?error=Ошибка+чтения+файла');   
 } else header('Location:index.php?error=Запрашиваемый+файл+не+существует');
+
+}
+}else header('Location:login.php');

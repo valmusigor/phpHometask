@@ -1,11 +1,18 @@
+<?
+$config=require_once('./config.php');
+if(isset($_COOKIE['auth']) && $_COOKIE['auth']==='ok' && isset($_COOKIE['id']) && array_key_exists($_COOKIE['id'], $config)){
+ if(isset($config[$_COOKIE['id']]['file']))
+{
+  
+?>
 <html>
     <head>
     <link href="./style/css/all.css" rel="stylesheet">
     <link href="./style/style.css" rel="stylesheet">
     </head>
-    <body>'
-      <?if(file_exists('tasks.txt')){
-        $handle=fopen('tasks.txt','r');
+    <body>
+      <?if(file_exists($config[$_COOKIE['id']]['file'])){
+        $handle=fopen($config[$_COOKIE['id']]['file'],'r');
          if(isset($handle)){
             while(($line=fgets($handle))){
               $lines[strtotime((explode("|", $line)[1]))]=$line;
@@ -17,6 +24,7 @@
             krsort($lines);
           }
         } ?>
+        <div style="display:flex;justify-content:space-between">
         <form action="savetask.php">
           <input type="text" name="task" placeholder="enter task">
           <select name="hour">
@@ -32,12 +40,14 @@
           <input type="date" name="calendar" value=<?=date("Y-m-d")?> min=<?=date("Y-m-d")?>>
           <button type="submit">Add task</button>
         </form>
+        <span><strong style="font-size:30px"><?=(isset($config[$_COOKIE['id']]['login']))?$config[$_COOKIE['id']]['login']:''?></strong><a href="./logout.php"><i class="fas fa-sign-out-alt fa-2x"></i></a></span>
+      </div>
         <form action="./updateTask.php">
         <span>Сортировка по дате</span> <a href="index.php?sort=up">По возрастанию</a> <a href="index.php?sort=down">По убыванию</a> 
         <? 
-           if(file_exists('tasks.txt')){
+           if(file_exists($config[$_COOKIE['id']]['file'])){
              $counter=0;
-             @$handle_read=fopen('tasks.txt','r');
+             @$handle_read=fopen($config[$_COOKIE['id']]['file'],'r');
              if(isset($handle)){
                foreach($lines as $line):
         ?>
@@ -104,3 +114,6 @@
         </script>
     </body>
 </html>
+<?
+}
+}else header('Location:login.php');
