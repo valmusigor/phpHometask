@@ -1,16 +1,16 @@
 <? 
-$config=require_once('./config.php');
-if(isset($_COOKIE['auth']) && $_COOKIE['auth']==='ok' && isset($_COOKIE['id']) && array_key_exists($_COOKIE['id'], $config)){
+require_once('./services.php');
+$userData=Autorize($_COOKIE['auth'],$_COOKIE['id']);
 
-  if(isset($config[$_COOKIE['id']]['file']))
+  if(isset($userData['file']))
 {
   
 foreach($_GET as $key=>$value)
 $mas[explode("_", $key)[1]][explode("_", $key)[0]]=htmlspecialchars(str_replace('|','',trim($value)));
 $counter=0;
 $ind=false;
-if(file_exists($config[$_COOKIE['id']]['file'])){
-  $handle=fopen($config[$_COOKIE['id']]['file'],'r');
+if(file_exists($userData['file'])){
+  $handle=fopen($userData['file'],'r');
   if(isset($handle)){
     while(($line=fgets($handle))){
       $str='';
@@ -29,8 +29,8 @@ if(file_exists($config[$_COOKIE['id']]['file'])){
     fclose($handle);
     if($ind)
       header('Location:index.php?error=Ошибка+редактирования');
-    else if(file_exists($config[$_COOKIE['id']]['file'])){
-      $handle=fopen($config[$_COOKIE['id']]['file'],'w');
+    else if(file_exists($userData['file'])){
+      $handle=fopen($userData['file'],'w');
       if(isset($handle)){
         for($i=0;$i<count($lines);$i++){
           fputs($handle, $lines[$i]);
@@ -46,4 +46,3 @@ if(file_exists($config[$_COOKIE['id']]['file'])){
 } else header('Location:index.php?error=Запрашиваемый+файл+не+существует');
 
 }
-}else header('Location:login.php');

@@ -1,5 +1,5 @@
 <?
- return $users=[
+ return [
      "1"=>[
         "login"=>"igor",
         "pass"=>"1234",
@@ -14,5 +14,10 @@
       "login"=>"ivan",
       "pass"=>"2468",
       "file"=>"tasksthree.txt",
-   ]
+     ],
+     "4"=>[
+      "login"=>"admin",
+      "pass"=>"2468",
+      "file"=>"tasksthree.txt",
+     ],
 ];

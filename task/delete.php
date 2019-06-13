@@ -1,17 +1,17 @@
 <? 
-$config=require_once('./config.php');
-if(isset($_COOKIE['auth']) && $_COOKIE['auth']==='ok' && isset($_COOKIE['id']) && array_key_exists($_COOKIE['id'], $config)){
-    if(isset($config[$_COOKIE['id']]['file']))
+require_once('./services.php');
+$userData=Autorize($_COOKIE['auth'],$_COOKIE['id']);
+    if(isset($userData['file']))
   {
     
-if(file_exists($config[$_COOKIE['id']]['file'])){
-  $handle=fopen($config[$_COOKIE['id']]['file'],'r');
+if(file_exists($userData['file'])){
+  $handle=fopen($userData['file'],'r');
   if(isset($handle)){
     while(($line=fgets($handle)))
         $lines[]=$line;
     fclose($handle);
-    if(file_exists($config[$_COOKIE['id']]['file'])){
-        $handle=fopen($config[$_COOKIE['id']]['file'],'w');
+    if(file_exists($userData['file'])){
+        $handle=fopen($userData['file'],'w');
         if(isset($handle)){
             for($i=0;$i<count($lines);$i++){
             if($i==$_GET['id'])
@@ -25,4 +25,3 @@ if(file_exists($config[$_COOKIE['id']]['file'])){
 }
 header('Location:index.php');
   }
-}else header('Location:login.php');

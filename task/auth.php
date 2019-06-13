@@ -16,7 +16,7 @@ if(isset($_POST['login']) && isset($_POST['pass'])){
               break;
           }
       }
-      if($success) header('Location:index.php');
+      if($success) {if($login==='admin') header('Location:admin.php'); else header('Location:index.php');}
       else header("Location:login.php?error=Пользователь+с+такими+данными+не+существует&login={$_POST['login']}&pass={$_POST['pass']}");  
     } else header('Location:login.php?error=Некорректный+ввод');  
 }
