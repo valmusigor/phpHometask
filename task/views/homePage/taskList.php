@@ -1,23 +1,18 @@
 <? 
-function taskList($userData,$lines){
-  if(file_exists($userData['file'])){
-    $counter=0;
-    $handle_read=fopen($userData['file'],'r');
-    if(isset($handle_read)){
-      foreach($lines as $line):
+function taskList($tasks){
+  
+    
+      foreach($tasks as $task):
 ?>
-        <div style="margin-top:10px" class=<?=(strtotime(explode("|", $line)[1])<strtotime(date("H:i Y-m-d")))?'expired':'' ?>>
-          <span class="des"><?=explode("|", $line)[0].'|'.explode("|", $line)[1] ?></span>
-          <i class="fas fa-edit fa-lg editTask" id=<?=$counter?>></i>
-          <a href="delete.php?id=<?=$counter?>">
+        <div style="margin-top:10px" class=<?=($task['time_end']<strtotime(date("H:i Y-m-d")))?'expired':'' ?>>
+          <span class="des"><?=$task['text'].'|'.date("H:i Y-m-d",$task['time_end']) ?></span>
+          <i class="fas fa-edit fa-lg editTask" id=<?=$task['id']?>></i>
+          <a href="delete.php?id=<?=$task['id']?>">
             <i class="fa fa-trash-alt fa-lg"></i>
           </a>
         </div>
-<?    
-        $counter++; 
+<? 
       endforeach;
-      fclose($handle_read);
-    }   
-  }
+  
 }
         

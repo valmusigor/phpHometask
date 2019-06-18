@@ -1,7 +1,7 @@
 <?
-if(isset($_COOKIE['auth']) && $_COOKIE['auth']==='ok' && isset($_COOKIE['id']) && array_key_exists($_COOKIE['id'], require_once('./config.php')))
-header('Location:index.php');
-else {
+require_once('./services.php');
+session_start();
+checkAutorizeLoginPage($_SESSION['auth'], $_SESSION['id']);
 ?>
 <html>
   <head><meta charset="utf-8"/></head>
@@ -14,4 +14,3 @@ else {
       </form>  
     </body>
 </html>
-<?}?>

@@ -1,27 +1,18 @@
 <? 
 require_once('./services.php');
-$userData=Autorize($_COOKIE['auth'],$_COOKIE['id']);
-    if(isset($userData['file']))
-  {
-    
-if(file_exists($userData['file'])){
-  $handle=fopen($userData['file'],'r');
-  if(isset($handle)){
-    while(($line=fgets($handle)))
-        $lines[]=$line;
-    fclose($handle);
-    if(file_exists($userData['file'])){
-        $handle=fopen($userData['file'],'w');
-        if(isset($handle)){
-            for($i=0;$i<count($lines);$i++){
-            if($i==$_GET['id'])
-                continue;
-                fputs($handle, $lines[$i]);
-            }
-        fclose($handle);
-        }
-    }
-  }
+require_once('./db.php');
+session_start();
+$result=Autorize($_SESSION['auth'], $_SESSION['id']);
+$id=htmlspecialchars(trim($_GET['id']));
+if(!isset($id)){
+  header('Location:index.php?error=Ошибка+удаления');
+  exit(); 
+}
+$delete=DB::getInstance()->delete('tasks',['id'=>$id]);
+if($delete==='error'){
+  header('Location:index.php?error=Ошибка+удаления');
+  exit(); 
 }
 header('Location:index.php');
-  }
+
+ 
