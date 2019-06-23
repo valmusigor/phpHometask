@@ -1,11 +1,17 @@
 <?
 require_once('./services/services.php');
 session_start();
-if(isset($_SESSION['auth']) && isset($_SESSION['id']) && checkAutorizeLoginPage($_SESSION['auth'], $_SESSION['id'])){
+if(isset($_SESSION['auth']) && isset($_SESSION['id'])){ 
+  $result=checkAutorizeLoginPage($_SESSION['auth'], $_SESSION['id']);
+  if($result){
+    if(isset($result['access']) && $result['access']==='1'){
+      header('Location:admin.php');
+      exit();
+    }
   header('Location:index.php');
   exit();
+  }
 }
-else {
 ?>
 <html>
   <head><meta charset="utf-8"/></head>
@@ -19,4 +25,3 @@ else {
       <a href="./register.php">Зарегестироваться</a> 
     </body>
 </html>
-<?}

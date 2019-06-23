@@ -1,9 +1,17 @@
 <?
 require_once('./services/services.php');
 session_start();
-if(isset($_SESSION['auth']) && isset($_SESSION['id']) && checkAutorizeLoginPage($_SESSION['auth'], $_SESSION['id']))
-header('Location:index.php');
-else {
+if(isset($_SESSION['auth']) && isset($_SESSION['id'])){ 
+  $result=checkAutorizeLoginPage($_SESSION['auth'], $_SESSION['id']);
+  if($result){
+    if(isset($result['access']) && $result['access']==='1'){
+      header('Location:admin.php');
+      exit();
+    }
+  header('Location:index.php');
+  exit();
+  }
+}
 ?>
 <html>
   <head><meta charset="utf-8"/></head>
@@ -18,4 +26,3 @@ else {
       <a href="./login.php">Войти</a> 
     </body>
 </html>
-<?}

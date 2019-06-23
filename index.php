@@ -6,6 +6,11 @@ if(!$result){
   header('Location:login.php?error=Вы+неавторизированы');
   exit();
 }
+if(isset($result['access']) && $result['access']==='1')
+{
+  header('Location:admin.php');
+  exit();
+}
 ?>
 <html>
     <head>

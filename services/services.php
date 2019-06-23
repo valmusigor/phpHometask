@@ -12,7 +12,7 @@ else { return false;}
 function checkAutorizeLoginPage($auth, $id){
   $result=findUserById($id); 
   if($auth==='ok' && $id==$result['userId']){
-  return true;
+  return $result;
   }
   return false;
 }
