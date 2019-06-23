@@ -1,17 +1,22 @@
 <?php
+require_once('../services/services.php');
+require_once('../services/fileServices.php');
+require_once('../components/db.php');
+session_start();
+$result=Autorize($_SESSION['auth'], $_SESSION['id']);
+if(!$result){
+  header('Location:../login.php?error=Вы+неавторизированы');
+  exit();
+}
   if(isset($_FILES['file']['error']) && $_FILES['file']['error']===0 &&  isset($_FILES['file']['name']) && isset($_FILES['file']['tmp_name']) && file_exists($_FILES['file']['tmp_name'])){
    if(isset($_FILES['file']['type']) && explode('/',$_FILES['file']['type'])[0]==='image'){
-     uploadFile();
+    $insertId=uploadFile($result,$_FILES['file']);
+    if(!$insertId){
+     header('Location:index.php?error=Ошибка+сохранения');
+     }
      header('Location:index.php');
    }
    else header('Location:index.php?error=Выберите+изображение+для+загрузки');
   }
   else header('Location:index.php?error=Ошибка+загрузки+файла');
  
-  function uploadFile(){
-    $arr=explode('.',$_FILES['file']['name']);
-    $filename=md5($_FILES['file']['name'].rand(1,99).time()).'.'.$arr[count($arr)-1];
-    $path='./images/'.$filename[0];
-    mkdir($path,0777, true);
-    move_uploaded_file($_FILES['file']['tmp_name'],$path.'/'. $filename);
-  }

@@ -10,7 +10,7 @@ class DB{
     }
     private function __construct(){
         setlocale(LC_ALL,'ru_RU.UTF8');
-        $dsn=require_once('./config_bd.php');
+        $dsn=require_once(__DIR__.'/../config/config_bd.php');
         try{
             $this->db = new PDO('mysql:host='.$dsn['host'].';dbname='.$dsn['dbname'],$dsn['user'], $dsn['pass']);
             $this->db->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
@@ -32,10 +32,10 @@ class DB{
 		} 
         return $this->db->lastInsertId();
     }
-    public function find($table,$data,$orderBy=false){
+    public function find($table,$data,$orderBy=false,$union='AND'){
         foreach($data as $key=>$value)
           $params[]=$key.'=:'.$key;
-        $where=implode(' AND ',$params);
+        $where=implode(' '.$union.' ',$params);
         if(!$orderBy)
         $querry=$this->db->prepare("SELECT * FROM $table WHERE $where");
         else

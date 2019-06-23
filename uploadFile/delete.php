@@ -1,11 +1,40 @@
 <?
-if(isset($_GET['path'])){
-   $path=htmlspecialchars(str_replace(' ','',trim($_GET['path'])));
-   if(file_exists($path)){
-      if(unlink($path))
-      header('Location:index.php');
-      else header('Location:index.php?error=Ошибка+удаления+файла'); 
-   }
-   else header('Location:index.php?error=Ошибка+удаления+файла'); 
+require_once('../services/services.php');
+require_once('../services/fileServices.php');
+session_start();
+$result=Autorize($_SESSION['auth'], $_SESSION['id']);
+if(!$result){
+  header('Location:../login.php?error=Вы+неавторизированы');
+  exit();
 }
-else header('Location:index.php?error=Ошибка+удаления+файла');
+if(!isset($_GET['fileId'])){
+header('Location:index.php?error=Ошибка+удаления+файла');
+exit();
+}
+$fileId=htmlspecialchars(str_replace(' ','',trim($_GET['fileId'])));
+$file=findFileById($fileId);
+if(!$file){
+   header('Location:index.php?error=Ошибка+удаления+файла');
+   exit();
+}
+$path='./images/'.$file['name'][0].'/'.$file['name'];
+if(!file_exists($path)){
+  header('Location:index.php?error=Файл+не+существует'); 
+  exit();
+}
+if($result['userId']!=$file['userId'])
+{
+  header('Location:index.php?error=Нет+прав+доступа'); 
+  exit();   
+}
+if(!unlink($path)){
+   header('Location:index.php?error=Ошибка+удаления+файла'); 
+}
+else{
+   $delete=DB::getInstance()->delete('files',['fileId'=>$file['fileId']]);
+   if($delete==='error'){
+      header('Location:index.php?error=Ошибка+удаления');
+      exit(); 
+    }
+}
+header('Location:index.php');

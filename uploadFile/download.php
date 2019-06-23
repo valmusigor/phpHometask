@@ -1,4 +1,11 @@
 <?
+require_once('../services/services.php');
+session_start();
+$result=Autorize($_SESSION['auth'], $_SESSION['id']);
+if(!$result){
+  header('Location:../login.php?error=Вы+неавторизированы');
+  exit();
+}
 if(isset($_GET['path'])){
   $path=htmlspecialchars(str_replace(' ','',trim($_GET['path'])));
   if(file_exists($path) && explode('/',mime_content_type($path)[0]==='image')){
