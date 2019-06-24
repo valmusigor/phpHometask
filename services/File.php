@@ -1,6 +1,8 @@
 <?php
-require_once(__DIR__.'/../components/db.php');
-function findAllFiles($path){
+namespace services;
+use components\DB;
+class File {
+public static function findAllFiles($path){
             $dirs=scandir($path);
             if(count($dirs)>2)
             {
@@ -18,7 +20,7 @@ function findAllFiles($path){
             return $result;
            }
 }
-function uploadFile($result,$files){
+public static function uploadFile($result,$files){
     $arr=explode('.',$files['name']);
     $filename=md5($files['name'].rand(1,99).time()).'.'.$arr[count($arr)-1];
     $path='./images/'.$filename[0];
@@ -29,14 +31,14 @@ function uploadFile($result,$files){
       return false;
     return $insertId;
 }
-function getFiles($result){
+public static function getFiles($result){
     $files=DB::getInstance()->find('files',['userId'=>$result['userId']],'fileId ASC');
     if($files==='error'){
       return false;
       }
     return $files;
 }
-function findFileById($id){
+public static function findFileById($id){
     $result = DB::getInstance()->find('files',['fileId'=>$id]);
     if(!is_array($result) && count($result)===0)
       return false;
@@ -44,3 +46,11 @@ function findFileById($id){
     return false;
     return $result[0];
   }
+public static function deleteFileFromBase($data){
+  $delete=DB::getInstance()->delete('files',$data);
+   if($delete==='error'){
+      return false;
+    }
+  return true;
+}
+};

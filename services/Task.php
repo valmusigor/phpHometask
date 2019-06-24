@@ -1,6 +1,8 @@
 <?
-require_once('../components/db.php');
-function checkInputTaskData($task,$data){
+namespace services;
+use components\DB;
+class Task{
+public static function checkInputTaskData($task,$data){
     if(!isset($task)){
       return false;      
     }
@@ -18,7 +20,7 @@ function checkInputTaskData($task,$data){
   }
  return [$task,$data_end];
 }
-function checkExist($time_end,$id){
+public static function checkExist($time_end,$id){
   $result = DB::getInstance()->find('tasks',['userId'=>$id, 'time_end'=>$time_end ]);
   if(is_array($result) && count($result)>0){
     return false;
@@ -26,7 +28,8 @@ function checkExist($time_end,$id){
   return true;
 }
 //проверка на доступ к функциям update/delete
-function checkAccess($userId, $tasksId){
+public static function checkAccess($userId, $tasksId){
   $result = DB::getInstance()->find('tasks',['id'=>$tasksId,'userId'=>$userId]);
   return (is_array($result) && count($result)===1)?true:false;
 }
+};

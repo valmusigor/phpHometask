@@ -1,30 +1,32 @@
 <?
-require_once(__DIR__.'/../components/db.php');
+namespace services;
+use components\DB;
+class User{
 //авторизация пользователя
-function Autorize($auth, $id){
-  $result=findUserById($id);
+public static function Autorize($auth, $id){
+  $result=self::findUserById($id);
   if(isset($auth) && $auth==='ok' && isset($id) && $id===$result['userId']){
     return $result;
 }
 else { return false;}
 }
 //если у пользователя открыта сессия
-function checkAutorizeLoginPage($auth, $id){
-  $result=findUserById($id); 
+public static function checkAutorizeLoginPage($auth, $id){
+  $result=self::findUserById($id); 
   if($auth==='ok' && $id==$result['userId']){
   return $result;
   }
   return false;
 }
 //поиск пользователя по id
-function findUserById($id){
+public static function findUserById($id){
   $result = DB::getInstance()->find('users',['userId'=>$id]);
   if(!is_array($result))
     exit();
   return $result[0];
 }
 //аунтефикация пользователя
-function findUserByAuthData($login,$pass){
+public static function findUserByAuthData($login,$pass){
     $result = DB::getInstance()->find('users',['login'=>$login,'email'=>$login],false,'OR');
     if(!is_array($result)){
       return false;
@@ -35,7 +37,7 @@ function findUserByAuthData($login,$pass){
     return (password_verify($pass,$result[0]['pass']))?$result[0]:false;
 }
 //проверка данных пользователя
-function checkInputUserData($login,$pass){
+public static function checkInputUserData($login,$pass){
     if(!isset($login) || !isset($pass)){
       return false;
     }
@@ -47,7 +49,7 @@ function checkInputUserData($login,$pass){
   return ['login'=>$login,'pass'=>$pass];
 }
 //проверка на валидность email
-function checkEmail($email){
+public static function checkEmail($email){
   if(!isset($email)){
     return false;
   }
@@ -55,7 +57,7 @@ function checkEmail($email){
   return (filter_var($email, FILTER_VALIDATE_EMAIL))?$email:false;
 }
 //проверка на существование пользователя с заданными данными
-function checkExistRegData($data)
+public static function checkExistRegData($data)
 {
   $result = DB::getInstance()->find('users',$data, false,'OR');
   if(is_array($result) && count($result)>0){
@@ -64,8 +66,10 @@ function checkExistRegData($data)
   return true;
 }
 //добавление пользователя в таблицу
-function insertData($data)
+public static function insertData($data)
 {
   $insertId=DB::getInstance()->insert('users',$data);
   return ($insertId)?$insertId:false;
 }
+
+};
