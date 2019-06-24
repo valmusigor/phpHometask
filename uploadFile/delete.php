@@ -1,8 +1,9 @@
 <?
-require_once('../services/services.php');
-require_once('../services/fileServices.php');
+use services\User;
+use services\File;
+require_once("../autoloader.php");
 session_start();
-$result=Autorize($_SESSION['auth'], $_SESSION['id']);
+$result=User::Autorize($_SESSION['auth'], $_SESSION['id']);
 if(!$result){
   header('Location:../login.php?error=Вы+неавторизированы');
   exit();
@@ -12,7 +13,7 @@ header('Location:index.php?error=Ошибка+удаления+файла');
 exit();
 }
 $fileId=htmlspecialchars(str_replace(' ','',trim($_GET['fileId'])));
-$file=findFileById($fileId);
+$file=File::findFileById($fileId);
 if(!$file){
    header('Location:index.php?error=Ошибка+удаления+файла');
    exit();
@@ -31,8 +32,8 @@ if(!unlink($path)){
    header('Location:index.php?error=Ошибка+удаления+файла'); 
 }
 else{
-   $delete=DB::getInstance()->delete('files',['fileId'=>$file['fileId']]);
-   if($delete==='error'){
+   $delete=File::deleteFileFromBase(['fileId'=>$file['fileId']]);
+   if($delete===false){
       header('Location:index.php?error=Ошибка+удаления');
       exit(); 
     }

@@ -1,15 +1,16 @@
 <? 
-require_once('../services/services.php');
-require_once('../services/taskServices.php');
-require_once('../components/db.php');
+use services\User;
+use services\Task;
+use components\DB;
+require_once("../autoloader.php");
 session_start();
-$result=Autorize($_SESSION['auth'], $_SESSION['id']);
+$result=User::Autorize($_SESSION['auth'], $_SESSION['id']);
 if(!$result){
   header('Location:../login.php?error=Вы+неавторизированы');
   exit();
 }
 $id=htmlspecialchars(trim($_GET['id']));
-if(!isset($id) || !checkAccess($result['userId'],$id)){
+if(!isset($id) || !Task::checkAccess($result['userId'],$id)){
   header('Location:index.php?error=Ошибка+удаления');
   exit(); 
 }

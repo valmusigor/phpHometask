@@ -1,9 +1,10 @@
 <? 
-require_once('../services/services.php');
-require_once('../services/taskServices.php');
-require_once('../components/db.php');
+use services\User;
+use services\Task;
+use components\DB;
+require_once("../autoloader.php");
 session_start();
-$result=Autorize($_SESSION['auth'], $_SESSION['id']);
+$result=User::Autorize($_SESSION['auth'], $_SESSION['id']);
 if(!$result){
   header('Location:../login.php?error=Вы+неавторизированы');
   exit();
@@ -12,7 +13,7 @@ foreach($_GET as $key=>$value)
   $mas[explode("_", $key)[1]][explode("_", $key)[0]]=htmlspecialchars(str_replace('|','',trim($value)));
 $success=true;
 foreach($mas as $key=>$value){
-  if(!checkAccess($result['userId'],$key)){
+  if(!Task::checkAccess($result['userId'],$key)){
     $success=false;
     break;
   }

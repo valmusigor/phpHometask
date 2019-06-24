@@ -1,8 +1,9 @@
 <?
-require_once('./services/services.php');
+use services\User;
+require_once('./autoloader.php');
 session_start();
 if(isset($_SESSION['auth']) && isset($_SESSION['id'])){ 
-  $result=checkAutorizeLoginPage($_SESSION['auth'], $_SESSION['id']);
+  $result=User::checkAutorizeLoginPage($_SESSION['auth'], $_SESSION['id']);
   if($result){
     if(isset($result['access']) && $result['access']==='1'){
       header('Location:admin.php');
@@ -12,18 +13,18 @@ if(isset($_SESSION['auth']) && isset($_SESSION['id'])){
   exit();
   }
 }
-$result=checkInputUserData($_POST['login'],$_POST['pass']);
-$email=checkEmail($_POST['email']);
+$result=User::checkInputUserData($_POST['login'],$_POST['pass']);
+$email=User::checkEmail($_POST['email']);
 if(!$result || !$email){
   header('Location:register.php?error=Некорректный+ввод'); 
   exit();
 }
-$exist=checkExistRegData(['login'=>$result['login'],'email'=>$email]);
+$exist=User::checkExistRegData(['login'=>$result['login'],'email'=>$email]);
 if(!$exist){
   header('Location:register.php?error=Пользователь+с+такими+данными+существует'); 
   exit();
 }
-$id=insertData(['login'=>$result['login'],'pass'=>password_hash ($result['pass'],PASSWORD_DEFAULT),'email'=>$email,'access'=>0]);
+$id=User::insertData(['login'=>$result['login'],'pass'=>password_hash ($result['pass'],PASSWORD_DEFAULT),'email'=>$email,'access'=>0]);
 if(!$id){
   header('Location:register.php?error=Ошибка+записи'); 
   exit();

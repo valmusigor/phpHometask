@@ -1,7 +1,8 @@
 <?
-require_once('../services/services.php');
+use services\User;
+require_once("../autoloader.php");
 session_start();
-$result=Autorize($_SESSION['auth'], $_SESSION['id']);
+$result=User::Autorize($_SESSION['auth'], $_SESSION['id']);
 if(!$result){
   header('Location:../login.php?error=Вы+неавторизированы');
   exit();

@@ -1,8 +1,9 @@
 <?
-require_once('../services/services.php');
-require_once('../services/fileServices.php');
+use services\User;
+use services\File;
+require_once("../autoloader.php");
 session_start();
-$result=Autorize($_SESSION['auth'], $_SESSION['id']);
+$result=User::Autorize($_SESSION['auth'], $_SESSION['id']);
 if(!$result){
   header('Location:../login.php?error=Вы+неавторизированы');
   exit();
@@ -30,7 +31,7 @@ if(!$result){
         ?>
 
         <?
-        $files=getFiles($result);
+        $files=File::getFiles($result);
         if(is_array($files) && count($files)>0){
             
         ?>

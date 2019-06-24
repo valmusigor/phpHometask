@@ -1,4 +1,6 @@
 <?
+namespace components;
+use \PDO;
 class DB{
     private static $instance=null;
     private $db;
