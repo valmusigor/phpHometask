@@ -32,4 +32,40 @@ public static function checkAccess($userId, $tasksId){
   $result = DB::getInstance()->find('tasks',['id'=>$tasksId,'userId'=>$userId]);
   return (is_array($result) && count($result)===1)?true:false;
 }
+public static function updateTask($data,$key){
+  $update=DB::getInstance()->update('tasks',$data,$key);
+  if($update==='error'){
+    return false;
+  }
+  return true;
+}
+public static function insertTask($data){
+  $insertId=DB::getInstance()->insert('tasks',$data); 
+  if($insertId==='error'){
+    return false;
+  }
+  return true;
+}
+public static function getTask($where,$sort=false){
+  if(!$sort){
+    $tasks=DB::getInstance()->find('tasks',$where);
+  }
+  else if($sort==='ASC'){
+    $tasks=DB::getInstance()->find('tasks',$where,'time_end ASC');
+  }
+  else {
+    $tasks=DB::getInstance()->find('tasks',$where,'time_end DESC');
+  }
+  if($tasks==='error'){
+    return false;
+  }
+  return $tasks;
+}
+public static function deleteTask($where){
+  $delete=DB::getInstance()->delete('tasks',$where);
+  if($delete==='error'){
+    return false;
+  }
+  return true;
+}
 };

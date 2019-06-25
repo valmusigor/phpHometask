@@ -1,7 +1,5 @@
 <?
-use services\User;
-use services\Task;
-use components\DB;
+use services\{User,Task};
 require_once("../autoloader.php");
 session_start();
 $result=User::Autorize($_SESSION['auth'], $_SESSION['id']);
@@ -18,7 +16,7 @@ if(!Task::checkExist($input[1],$result['userId'])){
   header('Location:index.php?error=В+данное+время+запланирован+task+поменяйте+время+или+дату');
   exit(); 
 }
-$insertId=DB::getInstance()->insert('tasks',["text"=>$input[0],"time_end"=>$input[1],"time_create"=>strtotime(date("Y-m-d H:i:s")), "userId"=>$result['userId'],]); 
+$insertId=Task::insertTask(["text"=>$input[0],"time_end"=>$input[1],"time_create"=>strtotime(date("Y-m-d H:i:s")), "userId"=>$result['userId'],]); 
 if(!$insertId)
   header('Location:index.php?error=Ошибка+сохранения');
 else header('Location:index.php');

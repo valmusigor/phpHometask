@@ -1,7 +1,5 @@
 <? 
-use services\User;
-use services\Task;
-use components\DB;
+use services\{User,Task};
 require_once("../autoloader.php");
 session_start();
 $result=User::Autorize($_SESSION['auth'], $_SESSION['id']);
@@ -15,8 +13,8 @@ if(!isset($id) || !Task::checkAccess($result['userId'],$id)){
   exit(); 
 }
 
-$delete=DB::getInstance()->delete('tasks',['id'=>$id]);
-if($delete==='error'){
+$delete=Task::deleteTask(['id'=>$id]);
+if(!$delete){
   header('Location:index.php?error=Ошибка+удаления');
   exit(); 
 }

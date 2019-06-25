@@ -1,7 +1,5 @@
 <? 
-use services\User;
-use services\Task;
-use components\DB;
+use services\{User,Task};
 require_once("../autoloader.php");
 session_start();
 $result=User::Autorize($_SESSION['auth'], $_SESSION['id']);
@@ -17,8 +15,8 @@ foreach($mas as $key=>$value){
     $success=false;
     break;
   }
-  $update=DB::getInstance()->update('tasks',['text'=>$value['edit'],'time_end'=>strtotime($value['hour'].':'.$value['minutes'].' '.$value['calendar'])],$key);
-  if($update==='error'){
+  $update=Task::updateTask(['text'=>$value['edit'],'time_end'=>strtotime($value['hour'].':'.$value['minutes'].' '.$value['calendar'])],$key);
+  if(!$update){
     $success=false;
     break;
   }

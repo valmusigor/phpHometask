@@ -1,6 +1,5 @@
 <?
-use services\User;
-use services\File;
+use services\{User,File};
 require_once("../autoloader.php");
 session_start();
 $result=User::Autorize($_SESSION['auth'], $_SESSION['id']);
