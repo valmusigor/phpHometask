@@ -1,4 +1,4 @@
-<form action="savetask.php" class="addTask">
+<form action="/cabinet/task/save" class="addTask">
   <input type="text" name="task" placeholder="enter task">
   <select name="hour">
     <? for($i=0;$i<24;$i++): ?>

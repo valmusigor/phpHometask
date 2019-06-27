@@ -3,7 +3,10 @@ namespace services;
 use components\DB;
 class User{
 //авторизация пользователя
-public static function Autorize($auth, $id){
+public static function Autorize(){
+  session_start();
+  $auth=$_SESSION['auth'];
+  $id=$_SESSION['id'];
   $result=self::findUserById($id);
   if(isset($auth) && $auth==='ok' && isset($id) && $id===$result['userId']){
     return $result;
@@ -11,7 +14,13 @@ public static function Autorize($auth, $id){
 else { return false;}
 }
 //если у пользователя открыта сессия
-public static function checkAutorizeLoginPage($auth, $id){
+public static function checkAutorizeLoginPage(){
+  session_start();
+  if(!isset($_SESSION['auth']) || !isset($_SESSION['id'])){ 
+  return false;
+  }
+  $auth=$_SESSION['auth'];
+  $id=$_SESSION['id'];
   $result=self::findUserById($id); 
   if($auth==='ok' && $id==$result['userId']){
   return $result;

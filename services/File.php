@@ -23,7 +23,7 @@ public static function findAllFiles($path){
 public static function uploadFile($result,$files){
     $arr=explode('.',$files['name']);
     $filename=md5($files['name'].rand(1,99).time()).'.'.$arr[count($arr)-1];
-    $path='./images/'.$filename[0];
+    $path='./uploadFile/images/'.$filename[0];
     mkdir($path,0777, true);
     move_uploaded_file($files['tmp_name'],$path.'/'. $filename);
     $insertId=DB::getInstance()->insert('files',["name"=>$filename,"time_upload"=>strtotime(date("Y-m-d H:i:s")),"userId"=>$result['userId'],]); 
